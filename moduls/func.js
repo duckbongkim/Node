@@ -1,6 +1,6 @@
 const {odd, even} = require('./var')
 
-function checkedOdd(num){
+function A(num){
     if (num % 2) {
         return odd
     }
@@ -9,4 +9,4 @@ function checkedOdd(num){
     }
 }
 
-module.exports=checkedOdd;
+module.exports=A;
