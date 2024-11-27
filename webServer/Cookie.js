@@ -11,14 +11,14 @@ const path = require('path');;
 // })
 
 
-const parseCookies = (cookie = '') => {// {'name=dongjin; email=aaaa@aaaa;.....'} 형태로 들어옴
+const parseCookies = (cookie = '') => {// 'name=dongjin; email=aaaa@aaaa;.....' 형태로 들어옴
     cookie
     .split(';')  // ['name=dong','email=aaaa@aaaa.com ....] 형태로 스플릿
     .map(v=> v.split('=')) // [[name,dongjin],[email,aaaaa@aaaa.com]] 형태로 스플릿
     .reduce((acc, [k,v])=>{
         acc[k.trim()] = decodeURIComponent(v);
         return acc; // {name : 'dongjin', email:aaaa@aaaa.com} << obj 형태로 만들어줌
-    }, {}); // iterable
+    }, {}); 
 }
 
 
@@ -26,7 +26,7 @@ http.createServer(async(req,res)=>{
     const cookies = parseCookies(req.headers.cookie); // 파싱한 쿠키를 cookies 에 담음
     if (req.url.startsWith('/login')) { // req.url >> /login?name=dong 전체 url이 나옴
         const url = new URL(req.url, 'http://localhost:8084'); // 기본 도메인을 (http://local:8084) 을 url 로 만들어줌
-        const name = url.searchParams.get('name'); // 쿼리문에 있는 name 의 키를 사용한 밸류값을 가져옴
+        const name = url.ssearchParams.get('name'); // 쿼리문에 있는 name 의 키를 사용한 밸류값을 가져옴
         const expires = new Date(); // 쿠키의 유효기간 new Date()<<현재시간
 
         expires.setMinutes(expires.getMinutes() + 3); // 쿠키를 new Date() 로부터 3분 동안 쿠키를 가지고 있음

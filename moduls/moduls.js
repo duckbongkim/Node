@@ -30,13 +30,13 @@ const path = require('path')
 
 // 경로상의 directory 부분 반환
 // console.log(path.dirname(process.cwd()))
-console.log(path.dirname('C:/Users/projects/func.js'))
+// console.log(path.dirname('C:/Users/projects/func.js'))
 
-// 경로상의 파일의 확장자 부분 반환
-console.log(path.extname('C:/Users/projects/func.js'))
-// 경로상의 파일의 이름반환(두번째 인수 : 제거할 확장자)
-console.log(path.basename('C:/Users/projects/func.js'))
-console.log(path.basename('C:/Users/projects/func.js','.js'))
+// // 경로상의 파일의 확장자 부분 반환
+// console.log(path.extname('C:/Users/projects/func.js'))
+// // 경로상의 파일의 이름반환(두번째 인수 : 제거할 확장자)
+// console.log(path.basename('C:/Users/projects/func.js'))
+// console.log(path.basename('C:/Users/projects/func.js','.js'))
 
 //입력한 인수를 path 정보로 반환 (상대경로의 path 를 만들대 사용)
 console.log(path.join('User','projects','func.js'))
