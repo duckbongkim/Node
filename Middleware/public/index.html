@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Express</title>
+</head>
+<!-- <body>
+    <h1>Send Json</h1>
+    <button id="sendButton">Send Json</button>
+
+    <script>
+        document.getElementById("sendButton").addEventListener('click', async()=>{
+            const jsonData = {name:'Dongjin',
+                                age:30,
+                                gender: 'Male'}
+            
+            try {
+                const response = await fetch('/send-json',{ // fetch >> 요청과 응답을받음
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(jsonData) // 문자열로 변환돼어 전달됨
+                });
+                // app.js 에 응답받은 
+                const result = await response.json() // app.js 에서 json으로 리스폰스를 보냄 >> json 으로 받아와야함
+                alert(`Sever Response: ${result.message}`); // app.js 에서 보낸 message 를 받아옴
+                
+            }catch(err) {
+                console.log(err);
+            }
+        })
+    </script>
+</body> -->
+<!-- <body>
+    <h1>submit form</h1>
+    <form action="/form" method="POST">
+        <label for="name">Name : </label>
+        <input type="text" id="name" name="name">
+        <br>
+        <br>
+        <label for="age">Age : </label>
+        <input type="number" id="age" name="age">
+        <br>
+        <br>
+        <label for="gender">gender</label>
+        <input type="text" id="gender" name="gender">
+        <button type="submit">입력</button>
+    </form>
+</body> -->
+
+<!-- <body>
+    <h1>single file upload</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required> 
+        <button type="submit">업로드</button>
+    </form>    
+</body> -->
+
+<body>
+    <h1>single file upload</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data >> data를 분할해서 보내는 방식 -->
+        <input type="file" name="files" multiple required> <!-- required >> 값이 필수로 있어야한다 -->
+        <button type="submit">업로드</button>
+    </form>    
+</body>
+
+</html>

@@ -8,6 +8,12 @@ const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const multer = require('multer')
+
+//라우터 불러오기
+
+const indexRouter = require('./Routers');
+const userRouter = require('./Routers/user')
 
 const app =express(); // 서버 생성
 const cookieScret = process.env.COOKIE_SECRET
@@ -15,22 +21,67 @@ const cookieScret = process.env.COOKIE_SECRET
 //PORT 설정
 app.set('port',process.env.PORT || 3000);
 
+// const storage = multer.diskStorage({
+//     destination:(req, file, cb) => { // destination 파일의 저장경로
+//         cb(null, 'uploads/')
+//     },
+//     filename: (req,file,cb) => { // 사용자가 업로드한 파일들의 이름이 겹칠경우 덮어쓰기 되기때문에 
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random()*1e9) // 유니크한 값을 지정
+//         cb(null, file.fieldname+'-'+uniqueSuffix+path.extname(file.originalname)) // 이미지의 이름 + 생성된 고유한 값 + 확장자명
+//     }
+// }); // 어디에 저장을 할지 결정하는 변수 생성 (multer의 저장위치 지정)
+
+
+
+// const upload = multer({ // multer 안에 있는 single , array 들이 미들웨어
+//     storage: storage,
+//     limits: {fileSize:1024*1024*5},
+// })
+
+// // single file
+// app.post('/upload', upload.single('file'), (req, res) =>{
+//     console.log(req.file);
+//     res.send(`File Upload Complate: ${req.file.filename}`)
+// })
+
+
+// '/upload',upload.array('files',5), (req,res)
+//  요청    ,미들웨어                , 콜백(응답)
+
+// app.post('/upload',upload.array('files',5), (req,res)=>{
+//     console.log(req.files)
+//     res.send(`Multiple File Upload`)
+// })
+
+
 
 //(공통)미들웨어
+
 //morgan 사용자의 어떤 요청이든 감지
-// 리퀘스트와 리스폰스 사이에 있어야하기 때문에 공통미들웨어 위에 작성
+// 리퀘스트와 리스폰스 사이에 있어야하기 때문에 라우터 위에 작성
 
 // 미들웨어 인수는 req,res,next // next 를 인수로 주지 않으면 다음 미들웨어가 실행이 안됨
 // 모듈로 불러오는 미들웨어는 next 가 포함되어있지만 포함이 되어있지 않은 미들웨어에서는 next를 인수로 줘야함
-app.use((req,res,next)=>{
-    console.log('내가 만든 미들웨어')
-    const error = new Error("에러 발생")
-    error.status = 503
-    next(error)
-})
 
+// app.use((req,res,next)=>{
+//     console.log('내가 만든 미들웨어')
+//     const error = new Error("에러 발생")
+//     error.status = 503
+//     next(error)
+// })
+
+// body-parser 미들웨어
+// express.jon // json 파싱을 해당 미들웨어서 실행함
+// app.use(express.json());
+
+
+
+//body.parser (urlencoded)
+// app.use(express.urlencoded())
+
+
+// 라우터 에서 사용할 미들웨어
 app.use(morgan('combined'))
-
 app.use(cookieParser(cookieScret)) // 모든 쿠키에 대해서 사용함.
 app.use(session({
     secret:process.env.SESSION_SCRET,
@@ -39,98 +90,46 @@ app.use(session({
     cookie :{maxAge:60000, httpOnly:true }
 })) // 브라우저 마다 세션이 다르게 생성됨
 
-app.use(express.static(path.join(__dirname,'static','imgs')))
+// app.use(express.static(path.join(__dirname,'public','imgs')))
 
 // 에러 미들웨어
-app.use((err,req,res,next)=>{
-    res.status(err.status || 500).send(err.message)
-})
-
-//라우터
-app.get('/session',(req,res,next)=>{
-    if (req.query.skip) { // /session?skip=true
-        return next('route')
-    } else {
-    req.session.user = {name:'dongjin', role:'admin',}
-    res.send("세션정보 저장완료")
-    }
-})
-
-app.get('/session',(req,res)=>{
-    res.send('다른라우터 동작')
-})
-
-app.get('/session/read',(req,res)=>{
-    if(req.session.user) {
-        res.send(`세션 정보 : ${req.session.user.name}`)
-    } else {
-        res.send('세션정보가 없습니다.')
-    }
-})
-
-app.get('/session/clear',(req,res)=>{
-    // req.session.destroy()//세션 정보삭제 세션을 유지
-    res.clearCookie('connect.sid')
-    res.send('세션 삭제')
-})
-
-// app.get('/',(req,res)=>{
-//     res.cookie('name','dongjin',{
-//         maxAge : 60000,
-//         httpOnly : true,
-//         path:'/',
-//         signed: true
-       
-//     })
-//     res.send('<h1>쿠키생성 완료</h1>')
-// }); // res.send>> 리스폰스를 보냇기 때문에 아래 동일한 라우터는 실행이 안됨
-
-app.get('/cookie/read/', (req, res)=>{
-    const userCookie = req.signedCookies.name;
-    if(userCookie) {
-        console.log(req.signedCookies)
-        res.send(`쿠키는 ${userCookie}`)
-        console.log(req.signedCookies)
-    } else {
-        res.send('쿠키가 없습니다.')
-    }
-})
-
-// app.get('/',(req,res)=>{
-//     res.send('안녕하세요2!')
-// });
-
-// app.get('/',(req, res)=> {
-//     console.log('Cookies: ', req.cookies)
-//     console.log('Signed Cookies: ', req.signedCookies)
-//     res.send("cookieParser")
-//   })
-
-app.get('/user',(req,res)=>{
-    res.send("user Info")
-})
-
-app.get('/category/',(req,res)=>{
-    res.send('category')
-})
-
-app.get('/category/note',(req,res)=>{
-    res.send('note')
-})
-
-app.get('/category/book',(req,res)=>{
-    res.send('book')
-})
-
-// /* >> /category/ 해당 라우터 뒤에 어떤 라우터가 들어오더라도 res.send를 처리함
-app.get('/category/*',(req,res)=>{
-    res.send('카테고리')
-})
-
-
-// app.get('*',(req,res)=>{
-//     res.send('404 에러 발생')
+// app.use((err,req,res,next)=>{
+//     res.status(err.status || 500).send(err.message)
 // })
+
+// app.post('/form',(req, res)=>{ 
+//     console.log(req.body);
+//     res.send(`데이터 처리 완료 : ${JSON.stringify(req.body)}`)
+// }) // 클라이언트가 전달한 요청을 파싱하여 전달 
+
+// app.post('/send-json',(req,res)=>{
+//     const {name, age, gender} = req.body
+//     console.log(req)
+//     console.log(`Parsing Data: ${name}, ${age}, ${gender}`)
+//     res.json({message: `Parsing Data: ${name}, ${age}, ${gender}`}); // message 를 index.html 에 리스폰스함
+//     // json 으로 리스폰스함
+// })
+// index 는 디폴트 
+// app.use(express.static(path.join(__dirname, 'public')))
+
+
+// ------------------라우터--------------------------
+// 라우터로 가는 코드
+// 1. 기본 url
+app.use('/',indexRouter)
+
+//2. /user/ 다음에 나오는 url
+app.use('/user',userRouter)
+
+//에러처리 미들웨어
+app.use((req,res,next)=>{
+    res.status(404).send('Not Found')
+})
+
+app.use((err,req,res,next)=>{
+    console.error(err);
+    res.status(500).send(err.message);
+})
 
 
 
