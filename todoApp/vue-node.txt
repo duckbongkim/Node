@@ -1,0 +1,17 @@
+클라이언트 서버 -vue
+백엔드 서버 -node
+
+프론트앤드
+1.vue-cli 프로젝트 생성
+2.필요한 패키지 설치
+3.vue 코딩
+
+백앤드
+1.필요한 패키지 설치
+2.서버 구성
+
+methods
+addtodo: 입력 > 입력한 값은 서버로 전송
+change Stauts : status (checkbox) > 바뀐값을 서버로 전송
+deleteTodo : 삭제 >  filter 사용 원하는 값만 표기
+updateTitle : 수정 > 입력받은 form 을 id와 함께 서버로 전송
