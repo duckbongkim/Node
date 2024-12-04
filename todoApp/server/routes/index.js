@@ -28,7 +28,8 @@ router.post('/',(req,res)=>{
 
 router.put('/:id',(req,res)=>{
     const {id} = req.params
-     todos = todos.map(todo=> todo.id == id ? {...todo, ...req.body} : todo)
+     todos = todos.map(todo=> todo.id == id ? {...todo, ...req.body} : todo) // map 요소에 함수나 기능들을 적용할때 사용
+     // 배열의 요소를 하나씩 maping 해서 조건문을 실행
     // todos = todos.map(todo=> todo.id === id ? {id:id, title:todo.title, done:req.body.done} : todo)
     console.log('todo Done 업데이트 완료')
     res.end()

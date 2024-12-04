@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({storage})
-
+// upload.single('image') 폼데이터를 저장 하는 역할
 router.post('/upload', upload.single('image'), (req, res)=>{
     const imageUrl = `uploads/${req.file.filename}`
     res.json({ imageUrl})
@@ -28,7 +28,8 @@ router.get('/',(req,res)=>{
             return res.status(500).json({error:'디렉토리 없음'})
         }
 
-        const imageUrls = files.map(file=>`/uploads/${file}`)
+        const imageUrls = files.map(file=>`/uploads/${file}`) // 이미지 파일들의 url을 만들어줌
+        console.log(files)
         res.json(imageUrls)
     })
 })

@@ -7,7 +7,12 @@
     <div class="carousel-item"
     :class="{active: index === 0}"
     v-for="(image, index) in images" :key="index">
-      <img src="image" class="d-block w-100" alt="...">
+      <img :src="`http://localhost:3000${image}`" class="d-block w-100" alt="..."
+        :style="{
+        height: '350px',
+        objectFit: 'center',
+        width: '100%'}"
+      >
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -169,7 +174,7 @@ export default{
         async getImages(){
             const response = await axios.get('http://localhost:3000/image');
             this.images = response.data
-            
+            console.log(this.images)
         }
 
     }
