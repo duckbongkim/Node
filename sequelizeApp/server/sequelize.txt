@@ -1,0 +1,17 @@
+MySQL << DB서버 : 컴퓨터에서 DB서버를 실행시켜줌
+MYSQL Worvench << DB를 GUI로 사용할수있게 해주는 프로그램
+>> Sever Connectioons : MySQL 서버에 접속가능
+Schema >> 실질적으로 사용되는 DB
+
+Primary Key >> 한 테이블에 하나의 Primary Key만 존재할수 있기때문에 중복된 값이나 NULL 값이 들어갈 수 없다.
+
+sequelize 순서
+
+1.sequelize-cli 기본구성설치
+1-1. models/index.js파일에 sequelize 기본설정
+
+2.models/User.js, Comment.js 파일 생성해서 모델 만들기
+
+3.관계 설정
+
+4.라우터 만들기
