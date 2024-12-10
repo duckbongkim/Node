@@ -41,9 +41,9 @@ router.route('/')
 router.get('/:id/comments',async (req,res,next)=>{
     try{
         const comment = await Comment.findAll({
-            include: {
+            include: { // sequelize 에서 연관된 모델의 데이터를 함께 조회할 때 사용
                 model:User,
-                where: {id: req.params.id}
+                where: {id: req.params.id} // where >> sequelize 에서 조회 저건을 지정하는데 사용
             },
         });
         console.log(comment);
