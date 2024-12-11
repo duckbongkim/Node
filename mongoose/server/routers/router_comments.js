@@ -1,74 +1,74 @@
-
 const express = require("express");
 const router = express.Router()
 const Comment = require("../models/comment") // 사용할 모델
 const User = require("../models/users");
-const { where } = require("sequelize");
 
-router.route('/')
-.get(async (req,res,next)=>{
+router.get('/',async(req,res,next)=>{
     try{
-        const comments = await Comment.find(
-            {
-                include: {
-                    model: User,
-                    attributes: ['name']
-                }
-            }
-        );
+        const comments = await Comment.find({})
         console.log(comments)
-        res.json(comments);
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-} )
-.post(async (req, res, next) =>{
-    try{
-        await Comment.create({
-            commenter: req.body.userid,
-            comment : req.body.comment
-        })
-        res.end();
-    }catch (err) {
+        res.json(comments)
+    } catch(err) {
         console.error(err)
         next(err)
     }
 })
 
-router.route('/:id')
-.patch( async(req,res,next)=>{
+// router.post('/',async(req,res,next)=>{
+//     try {
+//     const comment = await Comment.create({
+//         commenter: req.body.userid,
+//         comment: req.body.comment
+//     })
+//     res.end()
+//     }catch(err){
+//         console.error(err)
+//         next(err)
+//     }
+// })
+
+router.post('/',async(req,res,next)=>{
     try{
-        const {id} = req.params;
-        const {text} = req.body
-        
-        await Comment.update(
-            {comment:text},
-            {where:{id}}
+        const userId = await User.findOne({name:req.body.userid})
+        console.log(userId)
+        const comment = await Comment.create({
+            commenter : userId._id,
+            comment: req.body.comment
+        })
+        res.json(comment)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+})
+
+
+
+router.route('/:id')
+.patch(async(req,res,next)=>{
+    try{
+        const result = await Comment.updateOne({
+            _id:req.params.id
+        },
+       { comment:req.body.text})
+    res.json(result)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+})
+
+.delete(async(req,res,next)=>{
+    try{
+        await Comment.deleteOne(
+            {_id:req.params.id},
         )
         res.end()
     } catch(err){
         console.error(err)
+        next(err)
     }
 })
-
-.delete( async(req,res,next)=>{
-   try{
-    const {id} =req.params;
-    await Comment.destroy(
-        {where:{id}}
-    )
-    res.end()
-   }catch(err){
-    console.error(err)
-   }
-})
-
-
-
-
-
-
 
 
 
@@ -76,3 +76,17 @@ router.route('/:id')
 
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
