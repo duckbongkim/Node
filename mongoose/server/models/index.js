@@ -5,7 +5,7 @@ const connect = () =>{
     mongoose.set('debug',true); //디버그 모드는 MongoDB 쿼리를 로깅하여 개발중에 확인 가능하도록 하는 기능.
   }
   mongoose.connect('mongodb://dongjin:1234@localhost:27017/admin',{ //몽고디비 연결 mongodb://"접속 아이디":"접속 비밀번호"@"접속 주소":"접속 포트"/"데이터베이스 이름"
-    dbName:'nodejs', //데이터베이스 이름
+    dbName:'nodejs', //데이터베이스 이름 // admin >> rote 역할
     useNewUrlParser:true, //URL 파서 옵션 -> true설정을 안하면 최신 mongoDB에서 에러 발생
     // 몽구스를 커넥트 하면 몽고DB안에 있는 컬랙션을 가져다 씀 
   }).then(()=>{
