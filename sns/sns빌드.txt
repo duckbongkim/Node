@@ -9,3 +9,36 @@ passport(인증처리를 쉽게해주는 미들웨어,로그인과 사용자 인
 
 strategies(전략)
 아아디,비밀번호 입력하고 아이디와 비밀번호가 맞는지 확인
+1.passport &passport-local 설치
+2.middleware >> isNotLoggedin, isLoggedin
+3.AuthRouter 만들기 >> '/join',isNotLoggedin,join
+                    >>'/login',isNotLoggedin,login
+                    >>'/logout',isLoggedin,logout
+4.controller
+join => 회원가입
+사용자로부터 정보를 받아서 해당정보를 몽고디비에 저장
+login => 로그인
+사용자로부터 로그인정보를 받아서 MogoDB에 있는 데이터와 비교해서 해당 로그인을 실행
+logout=>로그아웃 (get)
+요청이 들어오면 로그 아웃상태로 변환
+
+5.LocalStategy (사용자 인증전략)
+(1).사용자에게 받은 값에서 DB에 있는 snsid와 같은게 있는지 찾는 작업
+(2).회원가입에서 사용한 암호화규칙을 적용해서 DB에 저장된 암호화 비교작업
+(3).1과2가 둘다 통과되면 유저 정보를 다음 미들웨어로 전달
+
+
+6.serialize & deserialize 만들기
+serialize => 사용자 정보를 세션에 저장
+deserialize => 사용자 정보를 복원
+
+---------------------------------------------------------
+게시판 기능
+
+사진 올리기
+게시글 올리기
+
+게시글 조회
+게시글 삭제
+게시글 수정
+

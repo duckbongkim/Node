@@ -7,12 +7,18 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport') // << session 이 있어야 사용가능
+const LocalStrategy = require('passport-local')
+
+
+const User = require('./schemas/users')
 
 
 dotenv.config()
 
 const pageRouter = require('./routes/pageRouter')
-const authRouter = require('./routes/authRouter')
+const authRouter = require('./routes/authRouter');
+const postRouter = require('./routes/postRouter')
+
 
 // 서버 연결
 const app = express();
@@ -48,13 +54,33 @@ app.use(session({
 app.use(passport.initialize()) // passport 미들웨어 사용
 app.use(passport.session()) // session 기반의 인증(전략)을 사용
 
+//passport-serialize : 세션에 사용자 id 저장
+// 시리얼라이즈할 정보를 정의
+passport.serializeUser((user,done)=>{
+    console.log('serializeUser',user)
+    done(null,user._id)
+})
+
+//post-deserialize : 세션에 사용자 정보 복원
+// 사용자 정보를 비교해서 조회 세션정보와 동일하면 세션유지
+passport.deserializeUser(async(id, done)=>{
+    try{
+        const user =await User.findById(id);
+        done(null, user)
+    }catch(err){
+        console.error(err)
+        done(err)
+    }
+})
+
 // router
 app.use('/',pageRouter);
 app.use('/auth',authRouter)
+app.use('/post',postRouter);
 
 //error 미들웨어
 app.use((req,res,next)=>{
-    const error = newError(`${req.method} ${req.url} 라우터 없음`)
+    const err = new Error(`${req.method} ${req.url} 라우터 없음`)
     err.status = 404;
     next(err)
 })

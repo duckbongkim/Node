@@ -23,8 +23,8 @@ const postSchema = new mongoose.Schema({
         type:Number,
         default:0,
     },
-},{timestamps: true, collation:'Post'})
+},{timestamps: true, collaction:'Posts'})
 
-const Post = mongoose.model('Post',postSchema)
+const Post = mongoose.model('Posts',postSchema)
 
 module.exports = Post

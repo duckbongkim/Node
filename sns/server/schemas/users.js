@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true,
-        maxlength:100,
+        maxlength:200,
     },
     email:{
         type:String,
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
         default:null
     },
 },{timestamps:false,
-    collation:'users'
+    collaction:'users'
 })
 
 const User = mongoose.model('User',userSchema)
