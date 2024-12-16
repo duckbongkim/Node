@@ -10,7 +10,6 @@ dotenv.config();
 // 회원가입
 exports.join = async (req,res,next)=>{
     const {snsid, password, email, phone, nick} = req.body
-    console.log(req.body)
     try{
         //중복검사
         const dupliucateUser = await User.findOne({$or:[{snsid},{email},{phone}]})
@@ -70,13 +69,13 @@ passport.use(new LocalStrategy({
 // 로그인
 exports.login = (req,res,next)=>{
     passport.authenticate('local',(authError,user,info)=>{ // passport 에서 제공하는 local 전략을 사용하겟다. 
-        console.log(user)
+        console.log('로그인 성공',user)
         if(authError){
             console.error(authError)
             return next(authError)
         }
         if(!user) {
-            return res.redirect(`/?error=${info.message}`)
+            return res.json({error:info.message})
         }
         return req.login(user, (loginError)=>{ // 유저정보가 들어오면 세션에 저장
             if(loginError){ // 로그인 오류시 오류메세지 출력

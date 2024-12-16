@@ -22,7 +22,6 @@ exports.uploadPost = async(req,res,next) =>{
                 hashtags.map(async(tag)=>{
                     const title = tag.slice(1).toLowerCase();
                     let hash = await Hashtags.findOne({title})
-                    
                     if(!hash) {
                         hash = await Hashtags.create({title})
                     }
@@ -33,6 +32,53 @@ exports.uploadPost = async(req,res,next) =>{
             await post.save();
         }
         res.redirect('/')
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+
+
+//게시물 수정
+exports.updatePost = async(req,res,next) =>{
+    try{
+        const {postId} = req.params;
+        const {content, img} = req.body;
+        console.log(content)
+        updateData = {content,img}
+
+        const hashtags = content.match(/#[^\s#]*/g);
+        
+        if(hashtags){
+            const hashtagDocs = await Promise.all(
+                hashtags.map(async(tag)=>{
+                    const title = tag.slice(1).toLowerCase();
+                    console.log(title)
+                    let hashtag = await Hashtags.findOne({title})
+                    if (!hashtag){
+                        hashtag = await Hashtags.create({title})
+                        console.log(hashtag)
+                    }
+                    return hashtag._id
+                })
+            )
+            updateData.hashtag = hashtagDocs
+        }
+        const updatePost = await Post.findByIdAndUpdate(postId,updateData,{new:true});// {new:true} 수정된 data를 반환 할때 사용
+        res.json(updatePost)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+//게시물 삭제
+exports.deletePost = async(req,res,next)=>{
+    try {
+        const {postId} = req.params
+        await Post.findByIdAndDelete(postId)
+        res.json({message: "삭제완료"})
     }catch(err){
         console.error(err)
         next(err)
